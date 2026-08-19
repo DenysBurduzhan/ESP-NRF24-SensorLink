@@ -1,7 +1,8 @@
+#pragma once
 
 typedef struct{
     float temp;
     float hum;
 }SensorData;
 
-SensorData data;
+extern SensorData data;
