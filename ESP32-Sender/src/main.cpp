@@ -13,9 +13,15 @@ void setup() {
     Serial.println("SimpleTx Starting");
 
     radio.begin();
+    if(!radio.begin())
+{
+    Serial.println("NRF24 not found!");
+    while(1);
+}
     radio.setDataRate( RF24_250KBPS );
     radio.setRetries(3,5);
     radio.openWritingPipe(slaveAddress);
+    radio.stopListening();
 }
 
 void loop() {
