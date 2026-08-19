@@ -1,18 +1,29 @@
 #include <Arduino.h>
+#include "Radio.hpp"
+#include "SensorData.hpp"
+#include "DhtSensor.hpp"
 
-// put function declarations here:
-int myFunction(int, int);
+unsigned long currentMillis;
+unsigned long prevMillis;
+unsigned long txIntervalMillis = 1000;
 
 void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+  Serial.begin(9600);
+    dht.begin();
+    Serial.println("SimpleTx Starting");
+
+    radio.begin();
+    radio.setDataRate( RF24_250KBPS );
+    radio.setRetries(3,5);
+    radio.openWritingPipe(slaveAddress);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  currentMillis = millis();
+    if (currentMillis - prevMillis >= txIntervalMillis) {
+        readTemperatureAndHumidity();
+        send();
+        prevMillis = millis();
+    }
 }
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
-}
