@@ -114,7 +114,7 @@ ESP8266 Receiver
     v
 TM1637 Display
 ```
-Timing
+## Timing
 
 The receiver uses millis() for non-blocking timing.
 
