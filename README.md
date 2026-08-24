@@ -6,6 +6,10 @@ A simple wireless sensor monitoring project based on **ESP32**, **ESP8266**, **n
 
 The project consists of two devices:
 
+**FreeRTOS:** The ESP32 transmitter uses FreeRTOS for task management
+and inter-task communication. The ESP8266 receiver uses the Arduino
+framework without FreeRTOS.
+
 ### Transmitter
 
 The transmitter is based on **ESP32**.
@@ -13,6 +17,8 @@ The transmitter is based on **ESP32**.
 It:
 
 - Reads temperature and humidity from a DHT sensor.
+- Uses **FreeRTOS tasks** to separate sensor acquisition and radio transmission.
+- Uses a **FreeRTOS queue** to transfer sensor data between tasks.
 - Sends sensor data using an nRF24L01 radio module.
 
 ### Receiver
@@ -27,7 +33,9 @@ It:
 The project was created as a practical embedded C++ project to practice microcontrollers, wireless communication, sensors, displays, and modular C++ programming.
 
 ## Features
-
+- FreeRTOS task-based architecture on ESP32
+- FreeRTOS queues for inter-task communication
+- Producer-consumer architecture
 - Temperature measurement
 - Humidity measurement
 - DHT sensor support
@@ -64,6 +72,7 @@ The project was created as a practical embedded C++ project to practice microcon
 - RF24
 - Adafruit DHT Sensor Library
 - AKJ7 TM1637 Driver
+- FreeRTOS
 
 ## Libraries
 
@@ -113,7 +122,44 @@ ESP8266 Receiver
     |
     v
 TM1637 Display
+
 ```
+### FreeRTOS Architecture
+
+The ESP32 transmitter uses FreeRTOS to separate sensor acquisition
+and radio transmission into independent tasks.
+
+The `SensorTask` periodically reads data from the DHT sensor and
+places the resulting `SensorData` structure into a FreeRTOS queue.
+
+The `RadioTask` waits for data from the queue and sends the received
+sensor data using the nRF24L01 module.
+
+The simplified architecture is:
+
+```
+SensorTask
+    |
+    | SensorData
+    v
+FreeRTOS Queue
+    |
+    v
+RadioTask
+    |
+    v
+nRF24L01
+    |
+    v
+ESP8266 Receiver
+```
+The `RadioTask` uses `portMAX_DELAY` when waiting for data from the
+queue. This allows the task to block while the queue is empty instead
+of continuously polling it.
+
+The sensor task uses `vTaskDelay()` to periodically perform sensor
+measurements.
+
 ## Timing
 
 The receiver uses millis() for non-blocking timing.
@@ -185,23 +231,24 @@ This project was created as a hands-on embedded C++ project.
 
 It helped me practice:
 
-C++
-Classes and objects
-Structs
-References
-Header and source files
-Modular code organization
-Sensor data acquisition
-UART / Serial communication
-SPI
-nRF24L01 wireless communication
-DHT sensors
-TM1637 displays
-millis()
-Non-blocking programming
-PlatformIO
-Embedded debugging
-Possible Future Improvements
+- C++ classes and objects
+- Structs
+- References
+- Header and source files
+- Modular code organization
+- Sensor data acquisition
+- UART / Serial communication
+- SPI
+- nRF24L01 wireless communication
+- DHT sensors
+- TM1637 displays
+- FreeRTOS tasks
+- FreeRTOS queues
+- Inter-task communication
+- Producer-consumer architecture
+- `millis()` and non-blocking programming
+- PlatformIO
+- Embedded debugging
 
 ## Possible improvements for future versions:
 
@@ -220,6 +267,7 @@ OLED display
 ## Technologies
 C++
 Arduino
+FreeRTOS
 ESP32
 ESP8266
 PlatformIO
