@@ -4,11 +4,11 @@ A simple wireless sensor monitoring project based on **ESP32**, **ESP8266**, **n
 
 ## Project Overview
 
-The project consists of two devices:
-
 **FreeRTOS:** The ESP32 transmitter uses FreeRTOS for task management
 and inter-task communication. The ESP8266 receiver uses the Arduino
 framework without FreeRTOS.
+
+The project consists of two devices:
 
 ### Transmitter
 
