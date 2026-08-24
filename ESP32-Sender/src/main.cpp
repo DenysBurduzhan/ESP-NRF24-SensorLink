@@ -7,6 +7,9 @@ unsigned long currentMillis;
 unsigned long prevMillis;
 unsigned long txIntervalMillis = 1000;
 
+QueueHandle_t sensorQueue = NULL;
+QueueHandle_t RadioQueue = NULL;
+
 void setup() {
   Serial.begin(9600);
     dht.begin();
