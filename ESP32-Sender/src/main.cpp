@@ -5,7 +5,6 @@
 
 unsigned long currentMillis;
 unsigned long prevMillis;
-//unsigned long txIntervalMillis = 1000;
 
 QueueHandle_t sensorQueue = NULL;
 
@@ -21,7 +20,6 @@ void RadioTask(void *pvParameters){
     while(1){
         if(xQueueReceive(sensorQueue, &data, portMAX_DELAY) == pdPASS){
             send();
-            vTaskDelay(1000 / portTICK_PERIOD_MS);
         }
     }
 }
@@ -53,11 +51,6 @@ void setup() {
 }
 
 void loop() {
-//   currentMillis = millis();
-//     if (currentMillis - prevMillis >= txIntervalMillis) {
-//         readTemperatureAndHumidity();
-//         send();
-//         prevMillis = millis();
-//     }
+
 }
 
